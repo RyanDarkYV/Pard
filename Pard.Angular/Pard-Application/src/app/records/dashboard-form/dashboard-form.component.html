@@ -1,0 +1,35 @@
+<div class="col-md-6">
+  <h2>Dashboard</h2>
+  <button class="btn btn-danger" (click)="createRecord()"> Create </button>
+  <table class ="table table-striped">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Country</th>
+        <th>City</th>
+        <th>Street</th>
+        <th>Update</th>
+      </tr>
+    </thead>
+      <tbody>
+        <tr *ngFor="let item of records">
+          <td>{{item.title}}</td>
+          <td>{{item.description}}</td>
+          <td>{{item.location.addressCountry}}</td>
+          <td>{{item.location.addressCity}}</td>
+          <td>{{item.location.addressStreet}}</td>
+          <td *ngIf="item.isDone == true">
+            Done
+          </td>
+          <td *ngIf="item.isDone == false">
+            In work.
+          </td>
+          <td>
+            <button class="btn btn-danger" (click)="updateRecord(item)" style="margin-left: 20px;">Update</button>
+          </td>
+        </tr>
+      </tbody>
+  </table>
+</div>

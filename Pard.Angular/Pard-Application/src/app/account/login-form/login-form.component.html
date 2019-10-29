@@ -1,0 +1,37 @@
+<div class="row">
+  <div class="col-md-6 new-user-alert">
+      <div *ngIf="brandNew" class="alert alert-success" role="alert">
+          <strong>All set!</strong> Please login with your account
+      </div>  
+     
+  </div>
+</div>
+
+<div class="container" id="container">
+  <div class="form-container sign-in-container">
+      <form #f="ngForm" novalidate (ngSubmit)="login(f)">
+        <h1>Sign in</h1>
+          
+          <div >
+            <input id="userName" type="text" required name="userName" class="form-control" placeholder="Login" [ngModel]="credentials.username" #userName="ngModel" tmFocus >
+          </div>
+          <div >
+            <input type="password" class="form-control" id="password" required name="password" placeholder="Password" ngModel>
+          </div>
+          <re-captcha class="cap"
+          (resolved)="resolved($event)"
+          siteKey="6Le3VroUAAAAAHH6FFoHN3_Hoco2AUKmWO7MHJD7"
+        ></re-captcha>
+          <div >
+              <button type="submit"  [disabled]="!isCaptcha || f.invalid || isRequesting">Login</button>
+              <app-spinner [isRunning]="isRequesting"></app-spinner> 
+          </div>
+
+
+          <div *ngIf="errors" class="alert alert-danger" role="alert">
+              <strong>Oops!</strong> {{errors}}
+            </div> 
+          
+        </form>
+   </div>
+</div>
