@@ -10,11 +10,9 @@ export class RecordsStateService {
 
     setState(record: Record): void {
         this.data = record;
-        console.log(JSON.stringify(this.data));
     }
 
     getState(): Record {
-        console.log(JSON.stringify(this.data));
         return this.data;
     }
 

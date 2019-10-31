@@ -12,7 +12,8 @@ namespace Pard.Persistence.Configurations
             builder.Property(x => x.UserId).IsRequired();
 
             builder.HasOne(x => x.Location)
-                .WithOne(x => x.Record);
+                .WithOne(x => x.Record)
+                .OnDelete(DeleteBehavior.Cascade);
 
         }
     }

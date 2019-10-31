@@ -13,7 +13,8 @@ import { RecordsStateService } from './services/state.records.service';
 import { MapComponent } from './map/map.component';
 import { LocationsStateService } from './services/state.locations.service';
 import { OverviewComponent } from './overview/overview.component';
-import { RecordDetailsComponent } from './record-details/record-details.component';
+import { ArchiveComponent } from './archive/archive.component';
+import { ArchiveService } from './services/archive.service';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,7 @@ import { RecordDetailsComponent } from './record-details/record-details.componen
     DashboardFormComponent,
     MapComponent,
     OverviewComponent,
-    RecordDetailsComponent
+    ArchiveComponent
   ],
   imports: [
     CommonModule,
@@ -32,6 +33,11 @@ import { RecordDetailsComponent } from './record-details/record-details.componen
     ReactiveFormsModule,
     SharedModule
   ],
-  providers: [ RecordService, RecordsStateService, LocationsStateService ]
+  providers: [
+    RecordService,
+    ArchiveService,
+    RecordsStateService,
+    LocationsStateService
+  ]
 })
 export class RecordsModule { }

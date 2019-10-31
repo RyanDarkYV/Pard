@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace Pard.WebApi.Controllers
 {

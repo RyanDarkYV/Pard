@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
-using Newtonsoft.Json;
+﻿using AutoMapper;
 using Pard.Application.Interfaces;
 using Pard.Application.ViewModels;
-using Pard.Domain.Entities.Locations;
 using Pard.Domain.Entities.Records;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Pard.Application.Services
 {
@@ -27,7 +25,6 @@ namespace Pard.Application.Services
             model.AddedAt = DateTime.UtcNow;
             model.Location.RecordId = model.Id;
             var entity = _mapper.Map<Record>(model);
-            Console.WriteLine(JsonConvert.SerializeObject(entity));
             await _repository.Create(entity);
         }
 
@@ -45,40 +42,29 @@ namespace Pard.Application.Services
             await _repository.Update(entity);
         }
 
-        public async Task<RecordViewModel> GetRecord(string title, Guid userId)
+        public async Task<RecordViewModel> GetRecordById(Guid recordId, Guid userId)
         {
-            var entity = await _repository.GetRecord(title, userId);
-            //var id = Guid.NewGuid();
-            //var entity = new Record
-            //{
-            //    Title = "test",
-            //    Description = "test",
-            //    Id = id,
-            //    UserId = userId,
-            //    AddedAt = DateTime.UtcNow,
-            //    FinishedAt = DateTime.UtcNow,
-            //    IsDone = true,
-            //    Location = new Location
-            //    {
-            //        Longitude = 30.444187000000056,
-            //        Latitude = 50.445151,
-            //        AddressCity = "Kyiv",
-            //        AddressState = null,
-            //        AddressCountry = "Ukraine",
-            //        AddressStreet = "Borshchahivska St, 154",
-            //        RecordId = id
-            //    }
-            //};
+            var entity = await _repository.GetRecordById(recordId, userId);
             var result = _mapper.Map<RecordViewModel>(entity);
             var marker = _mapper.Map<MarkerViewModel>(entity.Location);
             result.Location.Marker = marker;
             return result;
         }
 
-        public async Task<IEnumerable<RecordViewModel>> GetAllRecordForUser(Guid userId)
+        public async Task<RecordViewModel> GetRecordByTitle(string title, Guid userId)
         {
-            var entitiesList = await _repository.GetAllRecordsForUser(userId);
-            IEnumerable<RecordViewModel> resultList = _mapper.Map<IEnumerable<Record>, IEnumerable<RecordViewModel>>(entitiesList);
+            var entity = await _repository.GetRecordByTitle(title, userId);
+            var result = _mapper.Map<RecordViewModel>(entity);
+            var marker = _mapper.Map<MarkerViewModel>(entity.Location);
+            result.Location.Marker = marker;
+            return result;
+        }
+
+        public async Task<IEnumerable<RecordViewModel>> GetAllFinishedRecordsForUser(Guid userId)
+        {
+            var entitiesList = await _repository.GetAllFinishedRecordsForUser(userId);
+            IEnumerable<RecordViewModel> resultList = 
+                _mapper.Map<IEnumerable<Record>, IEnumerable<RecordViewModel>>(entitiesList);
 
             return resultList;
         }
@@ -90,6 +76,11 @@ namespace Pard.Application.Services
                 _mapper.Map<IEnumerable<Record>, IEnumerable<RecordViewModel>>(records);
 
             return resultList;
+        }
+
+        public async Task SoftDeleteRecord(Guid recordId, Guid userId)
+        {
+            await _repository.SoftDelete(recordId, userId);
         }
     }
 }

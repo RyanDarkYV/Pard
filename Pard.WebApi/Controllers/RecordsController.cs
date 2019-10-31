@@ -1,14 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Pard.Application.Services;
 using Pard.Application.ViewModels;
-using Pard.Domain.Entities.Identity;
+using System;
+using System.Threading.Tasks;
+using Pard.Application.Interfaces;
 
 namespace Pard.WebApi.Controllers
 {
@@ -18,25 +14,17 @@ namespace Pard.WebApi.Controllers
     public class RecordsController : BaseController
     {
         private readonly IRecordsService _recordsService;
-        private UserManager<AppUser> _userManager;
 
-        public RecordsController(IRecordsService recordsService, UserManager<AppUser> userManager)
+        public RecordsController(IRecordsService recordsService)
         {
             _recordsService = recordsService;
-            _userManager = userManager;
         }
-
-        [Authorize(Roles = "User")]
+        
         [HttpGet]
-        public async Task<IActionResult> GetAllRecordsForUser()
+        public async Task<IActionResult> GetAllFinishedRecordsForUser()
         {
             var userId = Guid.Parse(GetUserId());
-            var result = await _recordsService.GetAllRecordForUser(userId);
-            
-            //if (result == null || !result.Any())
-            //{
-            //    return new NotFoundResult();
-            //}
+            var result = await _recordsService.GetAllFinishedRecordsForUser(userId);
             
             return new OkObjectResult(result);
         }
@@ -54,12 +42,12 @@ namespace Pard.WebApi.Controllers
         public async Task<IActionResult> GetRecord(string title)
         {
             var userId = Guid.Parse(GetUserId());
-            var result = await _recordsService.GetRecord(title, userId);
+            var result = await _recordsService.GetRecordByTitle(title, userId);
 
-            //if (result == null)
-            //{
-            //    return new NotFoundResult();
-            //}
+            if (result == null)
+            {
+                return new NotFoundResult();
+            }
 
             return new OkObjectResult(result);
         }
@@ -80,6 +68,15 @@ namespace Pard.WebApi.Controllers
             model.UserId = userId.ToString();
             await _recordsService.UpdateRecord(model);
             return new OkObjectResult(model);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete([FromQuery] string id)
+        {
+            var recordId = Guid.Parse(id);
+            var userId = Guid.Parse(GetUserId());
+            await _recordsService.SoftDeleteRecord(recordId, userId);
+            return new OkResult();
         }
     }
 }

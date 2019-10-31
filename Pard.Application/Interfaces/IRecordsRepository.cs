@@ -9,8 +9,13 @@ namespace Pard.Application.Interfaces
     {
         Task Create(Record model);
         Task Update(Record model);
-        Task<Record> GetRecord(string title, Guid userId);
-        Task<IEnumerable<Record>> GetAllRecordsForUser(Guid userId);
+        Task<Record> GetRecordByTitle(string title, Guid userId);
+        Task<Record> GetRecordById(Guid id, Guid userId);
+        Task<IEnumerable<Record>> GetAllFinishedRecordsForUser(Guid userId);
         Task<IEnumerable<Record>> GetUnfinishedRecordsForUser(Guid userId);
+        Task<IEnumerable<Record>> GetArchivedRecordsForUser(Guid userId);
+        Task SoftDelete(Guid recordId, Guid userId);
+        Task Delete(Guid recordId, Guid userId);
+        Task Restore(Guid recordId, Guid userId);
     }
 }

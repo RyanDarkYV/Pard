@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild, NgZone } from '@angular/core';
-import { MapsAPILoader, AgmMap} from '@agm/core';
-import { GoogleMapsAPIWrapper } from '@agm/core';
+import { MapsAPILoader, AgmMap, GoogleMapsAPIWrapper } from '@agm/core';
+
 
 import { Marker } from '../models/marker';
 import { Location } from '../models/location';
@@ -105,6 +105,8 @@ export class MapComponent implements OnInit {
   markerDragEnd(m: any, $event: any) {
     this.location.marker.latitude = m.coords.lat;
     this.location.marker.longitude = m.coords.lng;
+    this.location.latitude = m.coords.lat;
+    this.location.longitude = m.coords.lng;
     this.findAddressByCoordinates();
    }
 

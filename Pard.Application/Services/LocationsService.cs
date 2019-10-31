@@ -21,7 +21,8 @@ namespace Pard.Application.Services
         public async Task<IEnumerable<LocationViewModel>> GetLocationsForActiveRecords(Guid userId)
         {
             var locations = await _repository.GetLocationsForActiveRecords(userId);
-            IEnumerable<LocationViewModel> result = _mapper.Map<IEnumerable<Location>, IEnumerable<LocationViewModel>>(locations);
+            IEnumerable<LocationViewModel> result = 
+                _mapper.Map<IEnumerable<Location>, IEnumerable<LocationViewModel>>(locations);
 
             return result;
         }

@@ -18,7 +18,10 @@
 
     <app-map></app-map>
 
-    <button (click)="onDashboard()" class="btn btn-success">Dashboard</button>
-    <button (click)="onSubmit()" class="btn btn-success">Create</button>
+    <div>
+        <button (click)="toOverview()" class="btn btn-dark">Back</button>
+        <div class="divider"></div>
+        <button (click)="onSubmit()" class="btn btn-dark">Create</button>
+      </div>
   </form>
 </div>

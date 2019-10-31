@@ -1,12 +1,36 @@
 <main role="main">
-  <!-- Main jumbotron for a primary marketing message or call to action -->
-  <div class="jumbotron">
-    <div class="container">
-      <p>
-        <a class="btn btn-primary btn-lg" href="#" role="button" routerLink="../register">Signup with email</a> 
-        <p>
-        <a class="btn btn-primary btn-lg" href="#" role="button" routerLink="../login">Login with email</a>
+  <div class="jumbotron jumbotron-fluid">
+
+    <div *ngIf="status" class="container">
+      <h1 class="display-4">Pard</h1>
+      <p class="lead">This is an application for your notes, which allows you to track places where work should be done.</p>
+      <hr class="my-4">
+      <p>To view incomplete tasks - go to the Overview page.</p>
+      <p class="lead">
+          <a class="btn btn-dark btn-lg" routerLinkActive="active" routerLink="/dashboard">Dashboard</a>
+        </p>
+      <p>To view completed tasks - go to the Dashboard page.</p>
+      <p class="lead">
+        <a class="btn btn-dark btn-lg" routerLinkActive="active" routerLink="/overview">Overview</a>
+      </p>
+      <p>To view archived tasks - go to the Archive page.</p>
+      <p class="lead">
+          <a class="btn btn-dark btn-lg" routerLinkActive="active" routerLink="/archive">Archive</a>
       </p>
     </div>
+
+    <div *ngIf="!status" class="container">
+        <h1 class="display-4">Pard</h1>
+        <p class="lead">This is an application for your notes, which allows you to track places where work should be done.</p>
+        <hr class="my-4">
+        <p>Log in to view your notes or register if you do not already have an account.</p>
+        <p class="lead">
+          <a class="btn btn-dark btn-lg" routerLinkActive="active" routerLink="/register">Sign up</a>
+        </p>
+        <p class="lead">
+          <a class="btn btn-dark btn-lg" routerLinkActive="active" routerLink="/login">Sign in</a>
+        </p>
+      </div>
+
   </div>
 </main>

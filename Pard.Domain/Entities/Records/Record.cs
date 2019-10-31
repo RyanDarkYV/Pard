@@ -12,6 +12,7 @@ namespace Pard.Domain.Entities.Records
         public DateTime AddedAt { get; set; }
         public DateTime? FinishedAt { get; set; }
         public Guid UserId { get; set; }
+        public bool IsDeleted { get; set; }
         
         public Location Location { get; set; }
     }

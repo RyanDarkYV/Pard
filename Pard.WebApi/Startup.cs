@@ -10,25 +10,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Pard.API.Extensions;
 using Pard.API.Models.Identity;
 using Pard.Application.Auth;
-using Pard.Application.Helpers;
+using Pard.Application.Interfaces;
 using Pard.Application.Services;
+using Pard.Application.ViewModels.Validations;
 using Pard.Domain.Entities.Identity;
 using Pard.Persistence.Contexts;
 using Pard.Persistence.Repositories.Records;
-using Serilog.AspNetCore;
+using Pard.WebApi.Extensions;
+using Serilog;
 using System;
 using System.Net;
 using System.Text;
-using Microsoft.Extensions.Logging;
-using Pard.Application.Interfaces;
-using Pard.Application.ViewModels.Validations;
-using Serilog;
-using Serilog.Core;
-using Serilog.Formatting.Compact;
 
 namespace Pard.WebApi
 {
@@ -36,15 +32,15 @@ namespace Pard.WebApi
     {
         private const string SecretKey = "whfsdhewefoewodwIEUDHdjwrYgGtHf;kjOiJ13123YRvSDiqweODDJFjdJNVZrqRUpQW2DfjaYrV";
         private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
-        //string path = "C:\\Users\\ryand\\source\\repos\\Pard\\logs\\journal.log";
 
         public Startup(IConfiguration configuration)
         {
-
-            //Log.Logger = new LoggerConfiguration()
-            //    .MinimumLevel.Warning()
-            //    .WriteTo.File(new CompactJsonFormatter(), path)
-            //    .CreateLogger();
+            //var loggerConfig = new LoggerConfiguration()
+            //    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200") ){
+            //        AutoRegisterTemplate = true,
+            //        AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv6
+            //    });
+            
             Configuration = configuration;
         }
 
@@ -71,6 +67,7 @@ namespace Pard.WebApi
             services.AddTransient<ILocationsRepository, SqlServerLocationsRepository>();
             services.AddTransient<IRecordsService, RecordsService>();
             services.AddTransient<ILocationsService, LocationsService>();
+            services.AddTransient<IArchiveService, ArchiveService>();
             services.AddMvc()
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RecordViewModelValidator>());
 
@@ -118,13 +115,6 @@ namespace Pard.WebApi
                         .AllowAnyMethod();
                 });  
             });
-
-            //services.AddAuthorization(options =>
-            //{
-            //    options.AddPolicy("ApiUser",
-            //        policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Role,
-            //            Constants.Strings.JwtClaims.ApiAccess));
-            //});
 
             services.AddAuthorization(opt =>
             {

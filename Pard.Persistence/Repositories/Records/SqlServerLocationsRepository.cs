@@ -10,6 +10,7 @@ namespace Pard.Persistence.Repositories.Records
 {
     public class SqlServerLocationsRepository : ILocationsRepository
     {
+        // TODO: Add abstraction for RecordsContext to ApplicationLayer and move repo implementation to ApplicationLayer
         private readonly RecordsContext _context;
 
         public SqlServerLocationsRepository(RecordsContext context)

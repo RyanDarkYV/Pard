@@ -10,7 +10,7 @@ import { BaseService } from '../../shared/services/base.service';
 @Injectable()
 
 export class RecordService extends BaseService {
-    baseUrl: string = '';
+    baseUrl = '';
 
     constructor(private http: HttpClient, private configService: ConfigService) {
         super();
@@ -21,27 +21,27 @@ export class RecordService extends BaseService {
         let headers = new HttpHeaders();
         headers = headers.append('Content-Type', 'application/json');
         headers = headers.append('Access-Control-Allow-Origin', '*');
-        let authToken = localStorage.getItem('auth_token');
+        const authToken = localStorage.getItem('auth_token');
         headers = headers.append('Authorization', `Bearer ${authToken}`);
 
         return this.http.get<Record>(this.baseUrl + `/records/getrecord/${title}`, { headers });
     }
 
-    getAllRecordsForUser(): Observable<Record[]> {
+    getAllFinishedRecordsForUser(): Observable<Record[]> {
         let headers = new HttpHeaders();
         headers = headers.append('Content-Type', 'application/json');
         headers = headers.append('Access-Control-Allow-Origin', '*');
-        let authToken = localStorage.getItem('auth_token');
+        const authToken = localStorage.getItem('auth_token');
         headers = headers.append('Authorization', `Bearer ${authToken}`);
 
-        return this.http.get<Record[]>(this.baseUrl + `/records/getallrecordsforuser`, { headers });
+        return this.http.get<Record[]>(this.baseUrl + `/records/GetAllFinishedRecordsForUser`, { headers });
     }
 
     getAllUnfinishedRecords(): Observable<Record[]> {
         let headers = new HttpHeaders();
         headers = headers.append('Content-Type', 'application/json');
         headers = headers.append('Access-Control-Allow-Origin', '*');
-        let authToken = localStorage.getItem('auth_token');
+        const authToken = localStorage.getItem('auth_token');
         headers = headers.append('Authorization', `Bearer ${authToken}`);
 
         return this.http.get<Record[]>(this.baseUrl + `/records/getallunfinishedrecordsforuser`, { headers });
@@ -51,9 +51,10 @@ export class RecordService extends BaseService {
         let headers = new HttpHeaders();
         headers = headers.append('Content-Type', 'application/json');
         headers = headers.append('Access-Control-Allow-Origin', '*');
-        let authToken = localStorage.getItem('auth_token');
+        const authToken = localStorage.getItem('auth_token');
         headers = headers.append('Authorization', `Bearer ${authToken}`);
 
+        console.log(JSON.stringify(record));
         return this.http.post(this.baseUrl + '/records/create', record, { headers });
     }
 
@@ -61,9 +62,19 @@ export class RecordService extends BaseService {
         let headers = new HttpHeaders();
         headers = headers.append('Content-Type', 'application/json');
         headers = headers.append('Access-Control-Allow-Origin', '*');
-        let authToken = localStorage.getItem('auth_token');
+        const authToken = localStorage.getItem('auth_token');
         headers = headers.append('Authorization', `Bearer ${authToken}`);
 
         return this.http.put(this.baseUrl + '/records/update', record, { headers });
+    }
+
+    softDeleteRecord(record: Record) {
+        let headers = new HttpHeaders();
+        headers = headers.append('Content-Type', 'application/json');
+        headers = headers.append('Access-Control-Allow-Origin', '*');
+        const authToken = localStorage.getItem('auth_token');
+        headers = headers.append('Authorization', `Bearer ${authToken}`);
+
+        return this.http.delete(this.baseUrl + `/records/delete?id=${record.id}`, { headers });
     }
 }

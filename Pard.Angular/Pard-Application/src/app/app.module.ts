@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AgmCoreModule, GoogleMapsAPIWrapper } from '@agm/core';
 
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
@@ -12,6 +11,7 @@ import { HeaderComponent } from './header/header.component';
 import { AccountModule } from './account/account.module';
 import { RecordsModule} from './records/records.module';
 import { ConfigService } from './shared/utils/config.service';
+import { FilterPipe } from './records/filters/filter.pipe';
 
 
 @NgModule({

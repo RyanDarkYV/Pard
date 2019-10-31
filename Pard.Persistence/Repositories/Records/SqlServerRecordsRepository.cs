@@ -1,17 +1,17 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Pard.Application.Interfaces;
+using Pard.Domain.Entities.Records;
+using Pard.Persistence.Contexts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Pard.Application.Interfaces;
-using Pard.Domain.Entities.Locations;
-using Pard.Domain.Entities.Records;
-using Pard.Persistence.Contexts;
 
 namespace Pard.Persistence.Repositories.Records
 {
     public class SqlServerRecordsRepository : IRecordsRepository
     {
+        // TODO: Add abstraction for RecordsContext to ApplicationLayer and move repo implementation to ApplicationLayer
         private readonly RecordsContext _context;
 
         public SqlServerRecordsRepository(RecordsContext context)
@@ -28,9 +28,11 @@ namespace Pard.Persistence.Repositories.Records
 
         public async Task Update(Record model)
         {
-            Record entity = await _context.Records.Where(x => x.Id == model.Id).Include(x => x.Location).FirstOrDefaultAsync();
-            //Location locationEntity =
-                //await _context.Locations.Where(x => x.RecordId == entity.Id).FirstOrDefaultAsync();
+            Record entity = await _context.Records
+                .Where(x => x.Id == model.Id)
+                .Include(x => x.Location)
+                .FirstOrDefaultAsync();
+           
             entity.Title = model.Title;
             entity.Description = model.Description;
             entity.IsDone = model.IsDone;
@@ -49,23 +51,92 @@ namespace Pard.Persistence.Repositories.Records
 
             await _context.SaveChangesAsync();
         }
-
-        public async Task<Record> GetRecord(string title, Guid userId)
+        
+        public async Task<Record> GetRecordById(Guid id, Guid userId)
         {
-            var result = await _context.Records.Where(x => x.UserId == userId && x.Title == title).Include(x => x.Location).FirstOrDefaultAsync();
+            var result = await _context.Records
+                .Where(x => x.UserId == userId && x.Id == id && x.IsDeleted == false)
+                .Include(x => x.Location)
+                .FirstOrDefaultAsync();
             return result;
         }
 
-        public async Task<IEnumerable<Record>> GetAllRecordsForUser(Guid userId)
+        public async Task<Record> GetRecordByTitle(string title, Guid userId)
         {
-            var result = _context.Records.Where(x => x.UserId == userId).Include(x => x.Location);
+            var result = await _context.Records
+                .Where(x => x.UserId == userId && x.Title == title && x.IsDeleted == false)
+                .Include(x => x.Location)
+                .FirstOrDefaultAsync();
+            return result;
+        }
+
+        public async Task<IEnumerable<Record>> GetAllFinishedRecordsForUser(Guid userId)
+        {
+            var result = _context.Records
+                .Where(x => x.UserId == userId && x.IsDeleted == false && x.IsDone)
+                .Include(x => x.Location)
+                .OrderBy(x => x.AddedAt);
             return result;
         }
 
         public async Task<IEnumerable<Record>> GetUnfinishedRecordsForUser(Guid userId)
         {
-            var result = _context.Records.Where(x => x.UserId == userId && x.IsDone == false).Include(x => x.Location);
+            var result = _context.Records
+                .Where(x => x.UserId == userId && x.IsDone == false && x.IsDeleted == false)
+                .Include(x => x.Location)
+                .OrderBy(x => x.AddedAt);
             return result;
+        }
+
+        public async Task<IEnumerable<Record>> GetArchivedRecordsForUser(Guid userId)
+        {
+            var result = _context.Records
+                .Where(x => x.UserId == userId && x.IsDeleted)
+                .Include(x => x.Location)
+                .OrderBy(x => x.AddedAt);
+            return result;
+        }
+
+        public async Task SoftDelete(Guid recordId, Guid userId)
+        {
+            var result = await _context.Records
+                .Where(x => x.UserId == userId && x.Id == recordId && x.IsDeleted == false)
+                .FirstOrDefaultAsync();
+            if (result == null)
+            {
+                return;
+            }
+
+            result.IsDeleted = true;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task Delete(Guid recordId, Guid userId)
+        {
+            var result = await _context.Records
+                .Where(x => x.UserId == userId && x.Id == recordId && x.IsDeleted)
+                .FirstOrDefaultAsync();
+            if (result == null)
+            {
+                return;
+            }
+
+            _context.Remove(result);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task Restore(Guid recordId, Guid userId)
+        {
+            var result = await _context.Records
+                .Where(x => x.UserId == userId && x.Id == recordId && x.IsDeleted)
+                .FirstOrDefaultAsync();
+            if (result == null)
+            {
+                return;
+            }
+
+            result.IsDeleted = false;
+            await _context.SaveChangesAsync();
         }
     }
 }

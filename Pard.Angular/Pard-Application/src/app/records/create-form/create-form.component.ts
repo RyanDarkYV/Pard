@@ -29,17 +29,20 @@ export class CreateFormComponent implements OnInit {
     });
   }
 
-  onDashboard() {
+  toOverview() {
     this.locationStateService.clearState();
-    this.router.navigate(['dashboard']);
+    this.router.navigate(['overview']);
   }
 
   onSubmit() {
     this.record = this.createForm.value;
     this.record.location = this.locationStateService.data;
+    console.log(JSON.stringify(this.record));
+    console.log(JSON.stringify(this.record.location));
+
     this.recordService.createRecord(this.record).subscribe(data => {
       this.locationStateService.clearState();
-      this.router.navigate(['dashboard']);
+      this.router.navigate(['overview']);
     });
   }
 

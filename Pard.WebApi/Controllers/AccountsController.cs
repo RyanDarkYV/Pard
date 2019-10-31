@@ -1,17 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Pard.Application.Helpers;
 using Pard.Application.ViewModels;
 using Pard.Domain.Entities.Identity;
 using Pard.Persistence.Contexts;
-using ILogger = Serilog.ILogger;
+using System;
+using System.Threading.Tasks;
 
 namespace Pard.WebApi.Controllers
 {
@@ -20,16 +16,14 @@ namespace Pard.WebApi.Controllers
     public class AccountsController : BaseController
     {
         private readonly UserManager<AppUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
         private readonly IdentityContext _context;
 
-        public AccountsController(UserManager<AppUser> userManager, IMapper mapper, IdentityContext dbContext, RoleManager<IdentityRole> roleManager)
+        public AccountsController(UserManager<AppUser> userManager, IMapper mapper, IdentityContext dbContext)
         {
             _userManager = userManager;
             _mapper = mapper;
             _context = dbContext;
-            _roleManager = roleManager;
         }
 
         [HttpPost]
@@ -57,7 +51,6 @@ namespace Pard.WebApi.Controllers
                 await _userManager.AddToRoleAsync(userIdentity,"Superadmin");
             }
 
-            var rolesList = await _userManager.GetRolesAsync(userIdentity);
             await _context.SaveChangesAsync();
             return new OkObjectResult(model);
         }

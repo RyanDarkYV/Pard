@@ -28,7 +28,6 @@ export class UpdateFormComponent implements OnInit {
     this.record = this.stateService.getState();
     this.locationStateService.setState(this.record.location);
     this.record.location = this.locationStateService.data;
-    console.log(JSON.stringify(this.record));
 
     this.editForm = this.formBuilder.group({
       title: [this.record.title],
@@ -43,9 +42,9 @@ export class UpdateFormComponent implements OnInit {
     this.stateService.clearState();
   }
 
-  onDashboard() {
+  toOverview() {
     this.locationStateService.clearState();
-    this.router.navigate(['dashboard']);
+    this.router.navigate(['overview']);
   }
 
   onSubmit() {
@@ -59,7 +58,7 @@ export class UpdateFormComponent implements OnInit {
     .subscribe(
       data => {
         this.locationStateService.clearState();
-        this.router.navigate(['dashboard']);
+        this.router.navigate(['overview']);
     },
     error => {
       alert(error);

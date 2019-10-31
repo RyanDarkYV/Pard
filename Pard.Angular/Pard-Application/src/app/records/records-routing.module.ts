@@ -5,12 +5,14 @@ import { CreateFormComponent } from './create-form/create-form.component';
 import { DashboardFormComponent } from './dashboard-form/dashboard-form.component';
 import { UpdateFormComponent } from './update-form/update-form.component';
 import { OverviewComponent } from './overview/overview.component';
+import { ArchiveComponent } from './archive/archive.component';
 
 export const recordsModuleRoutes: Routes = [
     { path: 'dashboard', component: DashboardFormComponent },
     { path: 'create', component: CreateFormComponent },
     { path: 'update', component: UpdateFormComponent},
-    { path: 'overview', component: OverviewComponent}
+    { path: 'overview', component: OverviewComponent},
+    { path: 'archive', component: ArchiveComponent}
 ];
 
 @NgModule({

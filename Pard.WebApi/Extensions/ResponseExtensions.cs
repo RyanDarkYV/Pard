@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Pard.API.Extensions
+namespace Pard.WebApi.Extensions
 {
     public static class ResponseExtensions
     {

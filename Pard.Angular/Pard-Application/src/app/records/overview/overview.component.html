@@ -2,17 +2,41 @@
 
 <div class="col-md-6">
   <h2>Overview</h2>
-  <button class="btn btn-danger" (click)="createRecord()"> Create </button>
+  
+  <agm-map [(latitude)]="location.latitude" [(longitude)]="location.longitude" [(zoom)]="location.zoom" [disableDefaultUI]="true" [zoomControl]="true" [(fitBounds)]='location.viewport'>
+    <agm-marker *ngFor="let data of records"
+      [(latitude)]="data.location.marker.latitude"
+      [(longitude)]="data.location.marker.longitude"
+      [markerDraggable]="data.location.marker.draggable"
+      (markerClick)="markerClicked(data)"
+      (mouseOver)="onMouseOver(infoWindow, $event)" 
+      (mouseOut)="onMouseOut(infoWindow, $event)"
+      [agmFitBounds]="true">
+      <agm-info-window [disableAutoPan]="false" #infoWindow>
+        <div>
+          <p>{{ data.title }}</p>
+          <p>{{ data.description }}</p>
+          <p>
+            {{ data.location.addressCountry }},
+            {{ data.location.addressCity }},
+            {{ data.location.addressStreet }}
+          </p>
+        </div>
+      </agm-info-window>
+    </agm-marker>
+  </agm-map>
+
+
   <table class ="table table-striped">
     <thead>
       <tr>
         <th>Title</th>
         <th>Description</th>
-        <th>Status</th>
+        <th>Street</th>
         <th>Country</th>
         <th>City</th>
-        <th>Street</th>
-        <th>Update</th>
+        <th>Status</th>
+        <th>Actions</th>
       </tr>
     </thead>
       <tbody>
@@ -21,17 +45,19 @@
           <td>{{item.description}}</td>
           <td>{{item.location.addressCountry}}</td>
           <td>{{item.location.addressCity}}</td>
-          <td>{{item.location.addressStreet}}</td>
+          <td>{{item.location.addressStreet}}</td>          
           <td *ngIf="item.isDone == true">
             Done
           </td>
           <td *ngIf="item.isDone == false">
             In work.
           </td>
-          <td>
-            <button class="btn btn-danger" (click)="updateRecord(item)" style="margin-left: 20px;">Update</button>
+          <td style='white-space: nowrap'>
+              <button class="editButton" (click)="updateRecord(item)" style="margin-left: 20px;"></button>          
+              <button class="deleteButton" (click)="deleteRecord(item)" style="margin-left: 20px;"></button>
           </td>
         </tr>
       </tbody>
   </table>
+  <button class="btn btn-dark" (click)="createRecord()"> Create </button>
 </div>
