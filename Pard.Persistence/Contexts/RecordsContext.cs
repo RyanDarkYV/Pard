@@ -7,7 +7,7 @@ using Pard.Domain.Entities.Records;
 
 namespace Pard.Persistence.Contexts
 {
-    public class RecordsContext : DbContext
+    public class RecordsContext : DbContext, IRecordsContext
     {
         public RecordsContext(DbContextOptions<RecordsContext> options) : base(options)
         { }
@@ -18,6 +18,11 @@ namespace Pard.Persistence.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(RecordsContext).Assembly);
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+        {
+            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }

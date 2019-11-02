@@ -19,12 +19,13 @@ using Pard.Application.Services;
 using Pard.Application.ViewModels.Validations;
 using Pard.Domain.Entities.Identity;
 using Pard.Persistence.Contexts;
-using Pard.Persistence.Repositories.Records;
 using Pard.WebApi.Extensions;
 using Serilog;
 using System;
 using System.Net;
 using System.Text;
+using Pard.Application.Repositories.Records;
+using Pard.Persistence;
 
 namespace Pard.WebApi
 {
@@ -50,12 +51,10 @@ namespace Pard.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RecordViewModelValidator>());
 
-            services.AddDbContext<IdentityContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("SqlServerExpressIdentity")));
-            services.AddDbContext<RecordsContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("SqlServerExpressRecords")));
+            services.AddPersistence(Configuration);
 
 #pragma warning disable 618
             services.AddAutoMapper();
@@ -68,8 +67,6 @@ namespace Pard.WebApi
             services.AddTransient<IRecordsService, RecordsService>();
             services.AddTransient<ILocationsService, LocationsService>();
             services.AddTransient<IArchiveService, ArchiveService>();
-            services.AddMvc()
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RecordViewModelValidator>());
 
             
             var jwtSettingsOptions = Configuration.GetSection(nameof(JwtIssuerOptions));

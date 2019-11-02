@@ -4,16 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Pard.Application.Interfaces;
 using Pard.Domain.Entities.Locations;
-using Pard.Persistence.Contexts;
 
-namespace Pard.Persistence.Repositories.Records
+namespace Pard.Application.Repositories.Records
 {
     public class SqlServerLocationsRepository : ILocationsRepository
     {
-        // TODO: Add abstraction for RecordsContext to ApplicationLayer and move repo implementation to ApplicationLayer
-        private readonly RecordsContext _context;
+        private readonly IRecordsContext _context;
 
-        public SqlServerLocationsRepository(RecordsContext context)
+        public SqlServerLocationsRepository(IRecordsContext context)
         {
             _context = context;
         }

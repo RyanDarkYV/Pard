@@ -1,20 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Pard.Application.Interfaces;
-using Pard.Domain.Entities.Records;
-using Pard.Persistence.Contexts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Pard.Application.Interfaces;
+using Pard.Domain.Entities.Records;
 
-namespace Pard.Persistence.Repositories.Records
+namespace Pard.Application.Repositories.Records
 {
     public class SqlServerRecordsRepository : IRecordsRepository
     {
         // TODO: Add abstraction for RecordsContext to ApplicationLayer and move repo implementation to ApplicationLayer
-        private readonly RecordsContext _context;
+        private readonly IRecordsContext _context;
 
-        public SqlServerRecordsRepository(RecordsContext context)
+        public SqlServerRecordsRepository(IRecordsContext context)
         {
             _context = context;
         }
@@ -23,7 +23,7 @@ namespace Pard.Persistence.Repositories.Records
         {
             await _context.Records.AddAsync(model);
             await _context.Locations.AddAsync(model.Location);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(new CancellationToken());
         }
 
         public async Task Update(Record model)
@@ -49,7 +49,7 @@ namespace Pard.Persistence.Repositories.Records
             entity.Location.Id = model.Location.Id;
             entity.Location.RecordId = model.Location.RecordId;
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(new CancellationToken());
         }
         
         public async Task<Record> GetRecordById(Guid id, Guid userId)
@@ -108,7 +108,7 @@ namespace Pard.Persistence.Repositories.Records
             }
 
             result.IsDeleted = true;
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(new CancellationToken());
         }
 
         public async Task Delete(Guid recordId, Guid userId)
@@ -121,8 +121,8 @@ namespace Pard.Persistence.Repositories.Records
                 return;
             }
 
-            _context.Remove(result);
-            await _context.SaveChangesAsync();
+            _context.Records.Remove(result);
+            await _context.SaveChangesAsync(new CancellationToken());
         }
 
         public async Task Restore(Guid recordId, Guid userId)
@@ -136,7 +136,7 @@ namespace Pard.Persistence.Repositories.Records
             }
 
             result.IsDeleted = false;
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(new CancellationToken());
         }
     }
 }
