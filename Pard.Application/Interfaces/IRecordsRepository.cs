@@ -17,5 +17,6 @@ namespace Pard.Application.Interfaces
         Task SoftDelete(Guid recordId, Guid userId);
         Task Delete(Guid recordId, Guid userId);
         Task Restore(Guid recordId, Guid userId);
+        Task<IEnumerable<Record>> GetRecords(bool status, Guid userId);
     }
 }
