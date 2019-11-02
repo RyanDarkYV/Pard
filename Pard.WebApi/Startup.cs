@@ -7,33 +7,25 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Pard.API.Models.Identity;
-using Pard.Application.Auth;
-using Pard.Application.Interfaces;
-using Pard.Application.Services;
+using Pard.Application;
+using Pard.Application.Models.Options;
 using Pard.Application.ViewModels.Validations;
 using Pard.Domain.Entities.Identity;
+using Pard.Persistence;
 using Pard.Persistence.Contexts;
 using Pard.WebApi.Extensions;
-using Serilog;
 using System;
 using System.Net;
 using System.Text;
-using Pard.Application.Repositories.Records;
-using Pard.Persistence;
 
 namespace Pard.WebApi
 {
     public class Startup
     {
-        private const string SecretKey = "whfsdhewefoewodwIEUDHdjwrYgGtHf;kjOiJ13123YRvSDiqweODDJFjdJNVZrqRUpQW2DfjaYrV";
-        private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
-
         public Startup(IConfiguration configuration)
         {
             //var loggerConfig = new LoggerConfiguration()
@@ -55,19 +47,17 @@ namespace Pard.WebApi
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<RecordViewModelValidator>());
 
             services.AddPersistence(Configuration);
+            services.AddApplication();
 
 #pragma warning disable 618
             services.AddAutoMapper();
 #pragma warning restore 618
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
-            
-            services.AddSingleton<IJwtFactory, JwtFactory>();
-            services.AddTransient<IRecordsRepository, SqlServerRecordsRepository>();
-            services.AddTransient<ILocationsRepository, SqlServerLocationsRepository>();
-            services.AddTransient<IRecordsService, RecordsService>();
-            services.AddTransient<ILocationsService, LocationsService>();
-            services.AddTransient<IArchiveService, ArchiveService>();
 
+
+            var secretKey = Configuration.GetSection(nameof(VaultOptions))[nameof(VaultOptions.SecretKey)];
+            
+            SymmetricSecurityKey signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
             
             var jwtSettingsOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
 
@@ -75,7 +65,7 @@ namespace Pard.WebApi
             {
                 opt.Issuer = jwtSettingsOptions[nameof(JwtIssuerOptions.Issuer)];
                 opt.Audience = jwtSettingsOptions[nameof(JwtIssuerOptions.Audience)];
-                opt.SigningCredentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
+                opt.SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
             });
 
             var tokenValidationParameters = new TokenValidationParameters
@@ -85,7 +75,7 @@ namespace Pard.WebApi
                 ValidateAudience = true,
                 ValidAudience = jwtSettingsOptions[nameof(JwtIssuerOptions.Audience)],
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = _signingKey,
+                IssuerSigningKey = signingKey,
                 RequireExpirationTime = false,
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero
@@ -113,14 +103,7 @@ namespace Pard.WebApi
                 });  
             });
 
-            services.AddAuthorization(opt =>
-            {
-                opt.AddPolicy("ApiUser", policy => policy.RequireRole("User"));
-                opt.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
-                opt.AddPolicy("Superadmin", policy => policy.RequireRole("Superadmin"));
-            });
-
-            var identityBuilder = services.AddIdentityCore<AppUser>(opt => // тут ошибка в IdentityRole
+            var identityBuilder = services.AddIdentityCore<AppUser>(opt => 
             {
                 opt.Password.RequireDigit = false;
                 opt.Password.RequireLowercase = false;
@@ -138,7 +121,6 @@ namespace Pard.WebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddSerilog();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

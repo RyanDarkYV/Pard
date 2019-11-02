@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Pard.Application.Auth;
-using Pard.API.Models.Identity;
+using Pard.Application.Models.Options;
 
 namespace Pard.Application.Helpers
 {

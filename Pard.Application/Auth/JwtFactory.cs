@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Pard.Application.Helpers;
-using Pard.API.Models.Identity;
+using Pard.Application.Models.Options;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace Pard.Application.Auth

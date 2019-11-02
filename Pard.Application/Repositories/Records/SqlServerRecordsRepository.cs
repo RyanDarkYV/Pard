@@ -138,5 +138,17 @@ namespace Pard.Application.Repositories.Records
             result.IsDeleted = false;
             await _context.SaveChangesAsync(new CancellationToken());
         }
+
+        public async Task<IEnumerable<Record>> GetRecords(bool status, Guid userId)
+        {
+            var result = _context.Records
+                .Where(record => record.UserId == userId
+                                 && record.IsDone == status
+                                 && record.IsDeleted == false)
+                .Include(record => record.Location)
+                .OrderBy(record => record.AddedAt);
+
+            return result;
+        }
     }
 }

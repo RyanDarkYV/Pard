@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Pard.API.Models.Identity
+namespace Pard.Application.Models.Options
 {
     public class JwtIssuerOptions
     {
