@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pard.Application", "Pard.Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pard.WebApi", "Pard.WebApi\Pard.WebApi.csproj", "{84FB2F67-90A2-4F59-9F10-682CA3F1CCAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pard.Infrastructure", "Pard.Infrastructure\Pard.Infrastructure.csproj", "{4F17C6AC-3CC2-4A6B-902F-71E40A518D00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pard.Infrastructure", "Pard.Infrastructure\Pard.Infrastructure.csproj", "{4F17C6AC-3CC2-4A6B-902F-71E40A518D00}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pard.Common", "Pard.Common\Pard.Common.csproj", "{2DE3239E-B3C9-4C69-9F53-17B1C02CEDCD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{4F17C6AC-3CC2-4A6B-902F-71E40A518D00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F17C6AC-3CC2-4A6B-902F-71E40A518D00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F17C6AC-3CC2-4A6B-902F-71E40A518D00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DE3239E-B3C9-4C69-9F53-17B1C02CEDCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DE3239E-B3C9-4C69-9F53-17B1C02CEDCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DE3239E-B3C9-4C69-9F53-17B1C02CEDCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DE3239E-B3C9-4C69-9F53-17B1C02CEDCD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,6 +69,7 @@ Global
 		{28A427AB-1D32-4383-BA6E-E588BC9C9973} = {5DDB819E-5536-4288-B8FC-9EA5E592DF55}
 		{84FB2F67-90A2-4F59-9F10-682CA3F1CCAC} = {F778C4FF-2887-474E-B67E-F9C7D55BF0C6}
 		{4F17C6AC-3CC2-4A6B-902F-71E40A518D00} = {180C2C83-66FD-4A4B-AC30-34699C94A513}
+		{2DE3239E-B3C9-4C69-9F53-17B1C02CEDCD} = {93FCAFA5-A367-439C-9335-FA72388ACEE1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {47C477FF-5723-4BC8-AAD6-AC8724BF1399}

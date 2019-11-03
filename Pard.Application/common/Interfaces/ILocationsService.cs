@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Pard.Application.ViewModels;
+using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
-using Pard.Application.ViewModels;
 
-namespace Pard.Application.Interfaces
+namespace Pard.Application.Common.Interfaces
 {
     public interface ILocationsService
     {

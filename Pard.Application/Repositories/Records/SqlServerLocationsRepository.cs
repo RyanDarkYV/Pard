@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Pard.Application.Interfaces;
+using Pard.Application.Common.Interfaces;
 using Pard.Domain.Entities.Locations;
 
 namespace Pard.Application.Repositories.Records

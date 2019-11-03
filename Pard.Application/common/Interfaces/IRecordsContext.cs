@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Pard.Domain.Entities.Locations;
 using Pard.Domain.Entities.Records;
 
-namespace Pard.Application.Interfaces
+namespace Pard.Application.Common.Interfaces
 {
     public interface IRecordsContext
     {

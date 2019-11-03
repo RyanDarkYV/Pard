@@ -3,7 +3,8 @@ using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Pard.Application.Auth;
-using Pard.Application.Interfaces;
+using Pard.Application.Common.Behaviors;
+using Pard.Application.Common.Interfaces;
 using Pard.Application.Repositories.Records;
 using Pard.Application.Services;
 
@@ -23,6 +24,8 @@ namespace Pard.Application
 
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPerformanceBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
 
             return services;
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Pard.Domain.Entities.Records;
 
-namespace Pard.Application.Interfaces
+namespace Pard.Application.Common.Interfaces
 {
     public interface IRecordsRepository
     {

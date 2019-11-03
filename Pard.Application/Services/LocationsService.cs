@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using Pard.Application.Interfaces;
+using Pard.Application.Common.Interfaces;
 using Pard.Application.ViewModels;
 using Pard.Domain.Entities.Locations;
 

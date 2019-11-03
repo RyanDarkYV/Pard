@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Pard.Application.Interfaces;
+using Pard.Application.Common.Interfaces;
 using Pard.Domain.Entities.Records;
 
 namespace Pard.Application.Repositories.Records

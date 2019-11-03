@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using Pard.Application.Common.Abstractions.Commands;
-using Pard.Application.Interfaces;
+using Pard.Application.Common.Interfaces;
 
 namespace Pard.Application.Records.Commands.DeleteRecord
 {
