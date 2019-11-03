@@ -3,7 +3,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Pard.Application.Auth;
-using Pard.Application.Interfaces;
+using Pard.Application.Common.Interfaces;
 using Pard.Application.Repositories.Records;
 using Pard.Application.Services;
 

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Pard.Application.Interfaces;
+using Pard.Application.Common.Interfaces;
 
 namespace Pard.WebApi.Controllers
 {

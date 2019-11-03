@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Pard.Application.Interfaces;
 using Pard.Application.ViewModels;
 using System;
 using System.Threading.Tasks;
+using Pard.Application.Common.Interfaces;
 
 namespace Pard.WebApi.Controllers
 {

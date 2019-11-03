@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Pard.Application.Interfaces;
+using Pard.Application.Common.Interfaces;
 using Pard.Persistence.Contexts;
 
 namespace Pard.Persistence
