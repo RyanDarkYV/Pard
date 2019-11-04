@@ -21,6 +21,8 @@ using Pard.WebApi.Extensions;
 using System;
 using System.Net;
 using System.Text;
+using Pard.Application.Common.Interfaces;
+using Pard.Infrastructure.Identity;
 using Serilog;
 using Serilog.Events;
 
@@ -51,7 +53,8 @@ namespace Pard.WebApi
 
             services.AddPersistence(Configuration);
             services.AddApplication();
-            
+            services.AddTransient<IUserManager, UserManagerService>();
+            services.AddTransient<IAuthService, AuthService>();
 
 #pragma warning disable 618
             services.AddAutoMapper();

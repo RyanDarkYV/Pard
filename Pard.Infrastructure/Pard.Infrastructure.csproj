@@ -14,8 +14,4 @@
     <ProjectReference Include="..\Pard.Application\Pard.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Identity\" />
-  </ItemGroup>
-
 </Project>
