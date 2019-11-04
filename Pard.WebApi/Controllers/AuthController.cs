@@ -16,7 +16,11 @@ namespace Pard.WebApi.Controllers
         {
             _authService = authService;
         }
-
+        /// <summary>
+        /// Authentication method
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>Returns user's jwt token.</returns>
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] CredentialsViewModel model)
         {

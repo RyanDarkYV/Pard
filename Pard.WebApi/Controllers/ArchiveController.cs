@@ -21,7 +21,10 @@ namespace Pard.WebApi.Controllers
         {
             _mediator = mediator;
         }
-
+        /// <summary>
+        /// Returns all archived records for user.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -30,7 +33,11 @@ namespace Pard.WebApi.Controllers
             
             return new OkObjectResult(result);
         }
-
+        /// <summary>
+        /// Removes a record from archive. Sets IsDeleted flag to false.
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
         [HttpPut]
         public async Task<IActionResult> Restore([FromBody] RestoreRecordCommand command)
         {
@@ -40,7 +47,11 @@ namespace Pard.WebApi.Controllers
             
             return new OkResult();
         }
-
+        /// <summary>
+        /// Deletes a record from archive.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete]
         public async Task<IActionResult> Delete([FromQuery] string id)
         {

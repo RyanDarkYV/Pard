@@ -23,7 +23,10 @@ namespace Pard.WebApi.Controllers
         {
             _mediator = mediator;
         }
-        
+        /// <summary>
+        /// Returns all finished records.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetAllFinishedRecordsForUser()
         {
@@ -38,7 +41,10 @@ namespace Pard.WebApi.Controllers
             
             return new OkObjectResult(result);
         }
-
+        /// <summary>
+        /// Returns all unfinished records.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetAllUnfinishedRecordsForUser()
         {
@@ -52,7 +58,11 @@ namespace Pard.WebApi.Controllers
             var result = await _mediator.Send(query);
             return new OkObjectResult(result);
         }
-
+        /// <summary>
+        /// Return a record with specified Id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRecord(Guid id)
         {
@@ -73,7 +83,11 @@ namespace Pard.WebApi.Controllers
 
             return new OkObjectResult(result);
         }
-
+        /// <summary>
+        /// Creates a record.
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateRecordCommand command)
         {
@@ -82,7 +96,11 @@ namespace Pard.WebApi.Controllers
             await _mediator.Send(command);
             return new OkResult();
         }
-
+        /// <summary>
+        /// Updates a record.
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateRecordCommand command)
         {
@@ -91,7 +109,11 @@ namespace Pard.WebApi.Controllers
             await _mediator.Send(command);
             return new OkResult();
         }
-
+        /// <summary>
+        /// Moves record to an archive. (Soft delete)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete]
         public async Task<IActionResult> Delete([FromQuery] string id)
         {

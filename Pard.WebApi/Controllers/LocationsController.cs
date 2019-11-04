@@ -18,7 +18,10 @@ namespace Pard.WebApi.Controllers
         {
             _locationsService = locationsService;
         }
-
+        /// <summary>
+        /// Returns an Enumerable of locations.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetLocationsForActiveRecords()
         {
