@@ -16,7 +16,11 @@ namespace Pard.WebApi.Controllers
         {
             _userService = userService;
         }
-
+        /// <summary>
+        /// Creates a new user.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>Returns UserId</returns>
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] RegistrationViewModel model)
         {
