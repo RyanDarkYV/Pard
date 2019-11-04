@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Pard.Application.ViewModels;
+using Pard.Application.Records.Commands.CreateRecord;
+using Pard.Application.Records.Commands.SoftDeleteRecord;
+using Pard.Application.Records.Commands.UpdateRecord;
+using Pard.Application.Records.Queries.GetRecordQuery;
+using Pard.Application.Records.Queries.GetRecordsQuery;
 using System;
 using System.Threading.Tasks;
-using Pard.Application.Common.Interfaces;
 
 namespace Pard.WebApi.Controllers
 {
@@ -13,18 +17,24 @@ namespace Pard.WebApi.Controllers
     [Route("api/[controller]/[action]")]
     public class RecordsController : BaseController
     {
-        private readonly IRecordsService _recordsService;
+        private readonly IMediator _mediator;
 
-        public RecordsController(IRecordsService recordsService)
+        public RecordsController(IMediator mediator)
         {
-            _recordsService = recordsService;
+            _mediator = mediator;
         }
         
         [HttpGet]
         public async Task<IActionResult> GetAllFinishedRecordsForUser()
         {
             var userId = Guid.Parse(GetUserId());
-            var result = await _recordsService.GetAllFinishedRecordsForUser(userId);
+
+            var query = new GetRecordsQuery
+            {
+                IsFinished = true,
+                UserId = userId
+            };
+            var result = await _mediator.Send(query);
             
             return new OkObjectResult(result);
         }
@@ -33,16 +43,28 @@ namespace Pard.WebApi.Controllers
         public async Task<IActionResult> GetAllUnfinishedRecordsForUser()
         {
             var userId = Guid.Parse(GetUserId());
-            var result = await _recordsService.GetAllRecordInWorkForUser(userId);
 
+            var query = new GetRecordsQuery
+            {
+                IsFinished = false,
+                UserId = userId
+            };
+            var result = await _mediator.Send(query);
             return new OkObjectResult(result);
         }
 
-        [HttpGet("{title}")]
-        public async Task<IActionResult> GetRecord(string title)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetRecord(Guid id)
         {
             var userId = Guid.Parse(GetUserId());
-            var result = await _recordsService.GetRecordByTitle(title, userId);
+
+            var query = new GetRecordQuery
+            {
+                Id = id,
+                UserId = userId
+            };
+
+            var result = await _mediator.Send(query);
 
             if (result == null)
             {
@@ -53,21 +75,21 @@ namespace Pard.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] RecordViewModel model)
+        public async Task<IActionResult> Create([FromBody] CreateRecordCommand command)
         {
             var userId = Guid.Parse(GetUserId());
-            model.UserId = userId.ToString();
-            await _recordsService.CreateRecord(model);
+            command.UserId = userId.ToString();
+            await _mediator.Send(command);
             return new OkResult();
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] RecordViewModel model)
+        public async Task<IActionResult> Update([FromBody] UpdateRecordCommand command)
         {
             var userId = Guid.Parse(GetUserId());
-            model.UserId = userId.ToString();
-            await _recordsService.UpdateRecord(model);
-            return new OkObjectResult(model);
+            command.UserId = userId.ToString();
+            await _mediator.Send(command);
+            return new OkResult();
         }
 
         [HttpDelete]
@@ -75,7 +97,14 @@ namespace Pard.WebApi.Controllers
         {
             var recordId = Guid.Parse(id);
             var userId = Guid.Parse(GetUserId());
-            await _recordsService.SoftDeleteRecord(recordId, userId);
+
+            var command = new SoftDeleteRecordCommand
+            {
+                Id = recordId,
+                UserId = userId
+            };
+            await _mediator.Send(command);
+
             return new OkResult();
         }
     }

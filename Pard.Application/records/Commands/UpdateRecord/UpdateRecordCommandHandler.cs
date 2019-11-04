@@ -23,8 +23,7 @@ namespace Pard.Application.Records.Commands.UpdateRecord
 
         public async Task<Unit> Handle(UpdateRecordCommand request, CancellationToken cancellationToken)
         {
-            var vm = _mapper.Map<UpdateRecordCommand, RecordViewModel>(request);
-            var entity = _mapper.Map<RecordViewModel, Record>(vm);
+            var entity = _mapper.Map<UpdateRecordCommand, Record>(request);
             if (entity.IsDone)
             {
                 if (entity.FinishedAt == null)

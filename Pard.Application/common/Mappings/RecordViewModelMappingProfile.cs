@@ -1,8 +1,9 @@
 ﻿using System;
 using AutoMapper;
+using Pard.Application.ViewModels;
 using Pard.Domain.Entities.Records;
 
-namespace Pard.Application.ViewModels.Mappings
+namespace Pard.Application.Common.Mappings
 {
     public class RecordViewModelMappingProfile : Profile
     {

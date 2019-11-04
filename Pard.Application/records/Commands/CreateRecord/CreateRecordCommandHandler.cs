@@ -23,8 +23,7 @@ namespace Pard.Application.Records.Commands.CreateRecord
 
         public async Task<Unit> Handle(CreateRecordCommand request, CancellationToken cancellationToken)
         {
-            var vm = _mapper.Map<CreateRecordCommand, RecordViewModel>(request);
-            var entity = _mapper.Map<RecordViewModel, Record>(vm);
+            var entity = _mapper.Map<CreateRecordCommand, Record>(request);
             entity.Id = Guid.NewGuid();
             entity.AddedAt = DateTime.UtcNow;
             entity.Location.RecordId = entity.Id;
