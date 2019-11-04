@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -9,6 +7,7 @@ using Pard.Application.Models.Options;
 using Pard.Infrastructure.Identity;
 using System;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Pard.Domain.Entities.Identity;
 
 namespace Pard.Infrastructure
