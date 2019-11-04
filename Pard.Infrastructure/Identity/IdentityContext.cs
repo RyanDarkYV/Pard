@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Pard.Domain.Entities.Identity;
 
-namespace Pard.Persistence.Contexts
+namespace Pard.Infrastructure.Identity
 {
     public class IdentityContext : IdentityDbContext<AppUser>
     {

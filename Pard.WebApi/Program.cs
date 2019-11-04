@@ -21,8 +21,7 @@ namespace Pard.WebApi
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
-
-        //.UseSerilog();
+                .UseStartup<Startup>()
+                .UseSerilog();
     }
 }

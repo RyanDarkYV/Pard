@@ -14,13 +14,17 @@ using Microsoft.IdentityModel.Tokens;
 using Pard.Application;
 using Pard.Application.Models.Options;
 using Pard.Application.ViewModels.Validations;
-using Pard.Domain.Entities.Identity;
 using Pard.Persistence;
 using Pard.Persistence.Contexts;
 using Pard.WebApi.Extensions;
 using System;
 using System.Net;
 using System.Text;
+using Pard.Application.Common.Interfaces;
+using Pard.Infrastructure;
+using Pard.Infrastructure.Identity;
+using Serilog;
+using Serilog.Events;
 
 namespace Pard.WebApi
 {
@@ -28,11 +32,12 @@ namespace Pard.WebApi
     {
         public Startup(IConfiguration configuration)
         {
-            //var loggerConfig = new LoggerConfiguration()
-            //    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200") ){
-            //        AutoRegisterTemplate = true,
-            //        AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv6
-            //    });
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .CreateLogger();
             
             Configuration = configuration;
         }
@@ -48,51 +53,11 @@ namespace Pard.WebApi
 
             services.AddPersistence(Configuration);
             services.AddApplication();
+            services.AddInfrastructure(Configuration);
 
-#pragma warning disable 618
-            services.AddAutoMapper();
-#pragma warning restore 618
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
-
-
-            var secretKey = Configuration.GetSection(nameof(VaultOptions))[nameof(VaultOptions.SecretKey)];
             
-            SymmetricSecurityKey signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
-            
-            var jwtSettingsOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
 
-            services.Configure<JwtIssuerOptions>(opt =>
-            {
-                opt.Issuer = jwtSettingsOptions[nameof(JwtIssuerOptions.Issuer)];
-                opt.Audience = jwtSettingsOptions[nameof(JwtIssuerOptions.Audience)];
-                opt.SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
-            });
-
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidIssuer = jwtSettingsOptions[nameof(JwtIssuerOptions.Issuer)],
-                ValidateAudience = true,
-                ValidAudience = jwtSettingsOptions[nameof(JwtIssuerOptions.Audience)],
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = signingKey,
-                RequireExpirationTime = false,
-                ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero
-            };
-
-            services.AddAuthentication(opt =>
-            {
-                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(cfg =>
-            {
-                cfg.ClaimsIssuer = jwtSettingsOptions[nameof(JwtIssuerOptions.Issuer)];
-                cfg.TokenValidationParameters = tokenValidationParameters;
-                cfg.SaveToken = true;
-               });
-            
             services.AddCors(c =>  
             {  
                 c.AddPolicy("Cors", options =>
@@ -102,20 +67,6 @@ namespace Pard.WebApi
                         .AllowAnyMethod();
                 });  
             });
-
-            var identityBuilder = services.AddIdentityCore<AppUser>(opt => 
-            {
-                opt.Password.RequireDigit = false;
-                opt.Password.RequireLowercase = false;
-                opt.Password.RequireUppercase = false;
-                opt.Password.RequiredLength = 6;
-                opt.Password.RequireNonAlphanumeric = false;
-            });
-            identityBuilder = new IdentityBuilder(identityBuilder.UserType, typeof(IdentityRole), identityBuilder.Services);
-            identityBuilder.AddEntityFrameworkStores<IdentityContext>().AddDefaultTokenProviders();
-            identityBuilder.AddRoleValidator<RoleValidator<IdentityRole>>();
-            identityBuilder.AddRoleManager<RoleManager<IdentityRole>>();
-            identityBuilder.AddSignInManager<SignInManager<AppUser>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

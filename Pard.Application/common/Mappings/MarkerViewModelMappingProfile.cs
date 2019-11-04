@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Pard.Domain.Entities.Locations;
+using Pard.Application.ViewModels;
 
-namespace Pard.Application.ViewModels.Mappings
+namespace Pard.Application.Common.Mappings
 {
     public class MarkerViewModelMappingProfile : Profile
     {
