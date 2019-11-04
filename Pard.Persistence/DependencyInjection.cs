@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Pard.Application.Common.Interfaces;
+using Pard.Infrastructure.Identity;
 using Pard.Persistence.Contexts;
 
 namespace Pard.Persistence

@@ -1,16 +1,8 @@
 ﻿using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using Pard.Application.Auth;
-using Pard.Application.Helpers;
-using Pard.Application.ViewModels;
-using Pard.Domain.Entities.Identity;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Pard.Application.Common.Interfaces;
-using Pard.Application.Models.Options;
+using Pard.Application.ViewModels;
+using System.Threading.Tasks;
 
 namespace Pard.WebApi.Controllers
 {
