@@ -21,6 +21,8 @@ using Pard.WebApi.Extensions;
 using System;
 using System.Net;
 using System.Text;
+using Serilog;
+using Serilog.Events;
 
 namespace Pard.WebApi
 {
@@ -28,11 +30,12 @@ namespace Pard.WebApi
     {
         public Startup(IConfiguration configuration)
         {
-            //var loggerConfig = new LoggerConfiguration()
-            //    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200") ){
-            //        AutoRegisterTemplate = true,
-            //        AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv6
-            //    });
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .CreateLogger();
             
             Configuration = configuration;
         }
@@ -48,6 +51,7 @@ namespace Pard.WebApi
 
             services.AddPersistence(Configuration);
             services.AddApplication();
+            
 
 #pragma warning disable 618
             services.AddAutoMapper();

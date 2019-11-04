@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Pard.Application.ViewModels;
+using Pard.Application.Records.Commands.DeleteRecord;
+using Pard.Application.Records.Commands.RestoreRecord;
+using Pard.Application.Records.Queries.GetArchivedRecordsQuery;
 using System;
 using System.Threading.Tasks;
-using Pard.Application.Common.Interfaces;
 
 namespace Pard.WebApi.Controllers
 {
@@ -13,28 +15,28 @@ namespace Pard.WebApi.Controllers
     [Route("api/[controller]/[action]")]
     public class ArchiveController : BaseController
     {
-        private readonly IArchiveService _archiveService;
+        private readonly IMediator _mediator;
 
-        public ArchiveController(IArchiveService archiveService)
+        public ArchiveController(IMediator mediator)
         {
-            _archiveService = archiveService;
+            _mediator = mediator;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
             var userId = Guid.Parse(GetUserId());
-            var result = await _archiveService.GetArchivedRecords(userId);
+            var result = await _mediator.Send(new GetArchivedRecordsQuery {UserId = userId});
             
             return new OkObjectResult(result);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Restore([FromBody] DeleteRecordViewModel model)
+        public async Task<IActionResult> Restore([FromBody] RestoreRecordCommand command)
         {
             var userId = Guid.Parse(GetUserId());
-            var recordId = Guid.Parse(model.Id);
-            await _archiveService.RestoreRecord(recordId, userId);
+            command.UserId = userId;
+            await _mediator.Send(command);
             
             return new OkResult();
         }
@@ -44,8 +46,10 @@ namespace Pard.WebApi.Controllers
         {
             var recordId = Guid.Parse(id);
             var userId = Guid.Parse(GetUserId());
-            await _archiveService.DeleteRecord(recordId, userId);
+            var command = new DeleteRecordCommand {Id = recordId, UserId = userId};
+            await _mediator.Send(command);
             return new OkResult();
+            
         }
 
     }

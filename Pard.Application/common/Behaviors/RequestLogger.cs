@@ -9,7 +9,7 @@ namespace Pard.Application.Common.Behaviors
     {
         private readonly ILogger _logger;
 
-        public RequestLogger(ILogger logger)
+        public RequestLogger(ILogger<TRequest> logger)
         {
             _logger = logger;
         }
