@@ -1,30 +1,21 @@
-﻿using AutoMapper;
-using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using Pard.Application;
-using Pard.Application.Models.Options;
 using Pard.Application.ViewModels.Validations;
-using Pard.Persistence;
-using Pard.Persistence.Contexts;
-using Pard.WebApi.Extensions;
-using System;
-using System.Net;
-using System.Text;
-using Pard.Application.Common.Interfaces;
 using Pard.Infrastructure;
-using Pard.Infrastructure.Identity;
+using Pard.Persistence;
+using Pard.WebApi.Extensions;
 using Serilog;
 using Serilog.Events;
+using Swashbuckle.AspNetCore.Swagger;
+using System.Net;
 
 namespace Pard.WebApi
 {
@@ -56,6 +47,7 @@ namespace Pard.WebApi
             services.AddInfrastructure(Configuration);
 
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info {Title = "Pard.Api", Version = "v1"}); });
             
 
             services.AddCors(c =>  
@@ -91,7 +83,12 @@ namespace Pard.WebApi
                             await context.Response.WriteAsync(error.Error.Message).ConfigureAwait(false);
                         }
                     }));
-
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1");
+                ;
+            });
             
             app.UseCors("Cors");
             app.UseAuthentication();
