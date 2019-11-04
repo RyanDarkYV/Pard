@@ -13,7 +13,7 @@ namespace Pard.Application.Records.Commands.CreateRecord
         public bool IsDone { get; set; }
         public DateTime AddedAt { get; set; }
         public DateTime? FinishedAt { get; set; }
-        public Location Location { get; set; }
+        public LocationViewModel Location { get; set; }
         public string UserId { get; set; }
     }
 }
